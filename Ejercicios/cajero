@@ -1,0 +1,128 @@
+const rl = require("readline").createInterface({
+    input: process.stdin,
+    output: process.stdout,
+});
+let cuentas = [
+
+    {
+        numero: "101",
+        propietario: "Ana ",
+        pin: "1234",
+        saldo: 9000000,
+    },
+    {
+        numero: "102",
+        propietario: "Jose ",
+        pin: "3423",
+        saldo: 1000000,
+    },
+    {
+        numero: "103",
+        propietario: "Sebastian ",
+        pin: "2543",
+        saldo: 4000000,
+    },
+    {
+        numero: "104",
+        propietario: "Julian ",
+        pin: "6534",
+        saldo: 3000000,
+    }
+];
+
+let cuentaActiva = null;
+const preguntar = (pregunta) => {
+    return new Promise((resolve) => {
+        rl.question(pregunta, (respuesta) => resolve(respuesta));
+    });
+};
+
+const menu = async() => {
+    console.log("\n=====MENU=====");
+    console.log(`usuario: ${cuentaActiva.propietario}|cuenta: ${cuentaActiva.numero} `)
+
+    console.log("1.Consultar saldo")
+    console.log("2.Depositar dinero")
+    console.log("3.Retirar dinero")
+    console.log("4.Cerrar sesion")
+    console.log("5.Salir")
+
+    const opcionIngresada = await preguntar("Selecciona una opcion ")
+
+    switch (opcionIngresada) {
+        case "1":
+            console.log("=====Consulta de saldo=====");
+            console.log(`\n Tu saldo actual es: $${cuentaActiva.saldo}`);
+
+            break;
+        case "2":
+            console.log("=====Depositar dinero=====");
+            const valorDeposito = number(
+                awaitpreguntar("Monto a depositar: ")
+            );
+            if (valorDeposito > 0) {
+                cuentaActiva.saldo += valorDeposito;
+                console.log(`Deposito exitoso, sue nuevo saldo es: $${ cuentaActiva.saldo}`);
+            } else {
+                console.log("Monto invalido");
+            }
+
+            break;
+        case "3":
+            console.log("=====Retirar dinero=====");
+            const valorRetiro = Number(await preguntar("Monto a retirar:"))
+            if (valorRetiro > 0 && valorRetiro <= cuentaActiva.saldo) {
+                cuentaActiva.saldo -= valorRetiro
+                console.log(`Retiro exitoso, su nuevo saldo es: $${ cuenta.saldo}`);
+            } else {
+                console.log("Fondo insuficiente");
+            }
+
+            break;
+        case "4":
+            console.log("===== Sesion terminada ¡Hasta luego!=====");
+            cuentaActiva === null;
+
+            return iniciar();
+        case "5":
+            console.log("=====Gracias por usar el cajero=====");
+            rl.close();
+            return;
+        default:
+            console.log("⚠️ Opcion no valida ⚠️");
+            break;
+
+
+
+    }
+
+    menu();
+};
+const iniciar = async() => {
+    console.log("========Bienvenido al cajero========");
+
+    const numerIngresado = await preguntar("digite el numero de su cuenta :")
+    const pinIngresado = await preguntar("Digite pin:");
+
+    const cuentaEncontrada = cuentas.find(
+
+        (cuenta) =>
+        (cuenta.numero === numerIngresado) && (cuenta.pin === pinIngresado)
+    );
+
+    if (cuentaEncontrada) {
+        cuentaActiva = cuentaEncontrada;
+        console.log(`\n✅ Bienvenida/o ${cuentaActiva.propietario ?? "Invitado"} ✅`);
+        menu();
+
+
+    } else {
+        console.log("⚠️ Error en las credenciales⚠️ ");
+        rl.close();
+        return;
+    }
+
+
+
+};
+iniciar();
